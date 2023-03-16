@@ -1,0 +1,110 @@
+CREATE DATABASE samkhan; 
+USE samkhan; 
+ 
+SHOW TABLES; 
+DESCRIBE movies; 
+SELECT 
+SELECT * FROM movies; 
+SELECT name,year FROM movies; 
+
+LIMIT 
+SELECT * FROM movies LIMIT 20; 
+SELECT * FROM movies LIMIT 20 OFFSET 40; 
+
+*** 
+**** 
+SELECT name,year FROM movies ORDER BY year DESC LIMIT 10; #default:ASC 
+SELECT * FROM movies ORDER BY year LIMIT 10; 
+
+DISTINCT 
+SELECT DISTINCT genre FROM movies_genres; 
+SELECT DISTINCT first_name, last_name FROM directors; 
+*** 
+**** 
+WHERE 
+SELECT * FROM movies WHERE rankscore>9; 
+SELECT * FROM movies WHERE rankscore>9 ORDER BY rankscore DESC LIMIT 20; 
+*** 
+
+# COMPARISON OPERATORS: =, <> or ! =, <,<=, >,>= 
+SELECT * FROM movies_genres WHERE genre = 'Comedy'; 
+SELECT * FROM movies_genres WHERE genre 
+'Horror'; 
+
+SELECT * FROM movies WHERE rankscore 
+****** 
+*********: 
+
+SELECT * FROM movies WHERE rankscore IS NOT NULL LIMIT 20; 
+
+# LOGICAL OPERATORS: AND, OR, NOT, ALL, ANY, BETWEEN, EXISTS, IN, LIKE, SOME 
+SELECT * FROM movies WHERE rankscore>9 AND year>2000; 
+SELECT * FROM movies WHERE NOT year<=2000 LIMIT 20; 
+SELECT * FROM movies WHERE rankscore>9 OR year>2007; 
+SELECT * FROM movies WHERE year BETWEEN 1999 AND 2000; (inclusive: year>=1999 and year<=2000) 
+SELECT * FROM movies WHERE year BETWEEN 2000 AND 1999; (lowvalue <= highvalue else you will get an empty result set) 
+SELECT * FROM directors_genres WHERE genre IN ('Comedy', 'Horror'); (same as genre='Comedy' OR genre="Horror') 
+
+AGGREGATE FUNCTIONS: COUNT, MIN, MAX, SUM, AVG 
+
+SELECT MIN(year) FROM movies; 
+SELECT MAX(year) FROM movies; 
+SELECT COUNT(year) FROM movies; 
+SELECT COUNT(*) FROM movies where year>2000; 
+
+
+GROUP-BY # find number of movies released per year 
+
+SELECT year, COUNT(year) FROM movies GROUP BY year; 
+ 
+SELECT year, COUNT(year) FROM movies GROUP BY year ORDER BY year; 
+year_count; 
+SELECT year, COUNT(year) year_count FROM movies GROUP BY year ORDER BY 
+ 
+
+*** 
+HAVING: 
+*Print years which have >1000 movies in our DB [Data Scientist for Analysis] 
+SELECT year, COUNT(year) year_count FROM movies GROUP BY year HAVING year_count>1000; 
+# specify a condition on groups using HAVING. 
+SELECT year, COUNT(year) year_count FROM movies WHERE rankscore>9 GROUP BY year HAVING 
+year_count>20; 
+Order of execution: 
+1. GROUP BY to create groups 
+2. apply the AGGREGATE FUNCTION 
+3. Apply HAVING condition. 
+
+SELECT * FROM movies HAVING year>2000; 
+(HAVING without GROUP BY is same as WHERE) 
+*HAVING vs WHERE 
+
+## WHERE is applied on individual rows while HAVING is applied on groups. ## HAVING is applied after grouping while WHERE is used before grouping. 
+JOIN (combine data in multiple tables): 
+1. JOIN or INNER JOIN 
+2. FULL JOIN or FULL OUTER JOIN 
+3. 
+LEFT JOIN or LEFT OUTER JOIN 
+4. RIGHT JOIN or RIGHT OUTER JOIN 
+# For each movie, print name and the genres 
+ 
+SELECT m.name, g.genre from movies m JOIN movies_genres g ON m.id=g.movie_id; 
+# table aliases: m and g 
+
+# natural join: a join where we have the same column-names across two tables. 
+#T1: C1, C2 
+#T2: C1, C3, C4 
+SELECT * FROM T1 JOIN T2: 
+
+
+SELECT * FROM T1 JOIN T2 USING (C1); 
+# returns C1,C2,C3,C4 
+
+# no need to use the keyword "ON" 
+# Inner join (default) vs left outer vs right outer vs full-outer join. 
+SELECT m.name, g.genre from movies m LEFT JOIN movies_genres g ON m.id=g.movie_id LIMIT 20; 
+# NULL for missing counterpart rows. 
+# 3-way joins and k-way joins 
+SELECT a.first_name, a.last_name FROM actors a JOIN roles r ON a.id=r.actor_id JOIN movies m on m.id=r.movie_id AND m.name='Officer 444'; 
+*Practical note about joins: Joins can be expensive computationally when we have large tables.*
+
+
